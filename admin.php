@@ -37,17 +37,15 @@ if (isset($_POST['name'])){
 		echo'<script type="text/javascript">alert( "Вы вышли из учетной записи администратора! Редактирование не доступно");</script>';
 
 	}else{
-		DataHandler::EditNote($ID, $Name, $Email, $Text);
+		$NoteList = DataHandler::GetNotes(0);
+		if ($NoteList[$ID]["name"] == $Name and $NoteList[$ID]["email"] == $Email){
+			DataHandler::EditNote($ID, $Name, $Email, $Text, true);
+		}else{			
+			DataHandler::EditNote($ID, $Name, $Email, $Text, false);			
+		}
 		echo'<script type="text/javascript">alert( "Задача успешно отредактирована!");document.location.href = "index.php";</script>';
 	}
-
-
-
-
-
-	
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -107,9 +105,6 @@ if (isset($_POST['name'])){
 				echo '<input style="display: none;" type="text" name="Post" value="' . $Post . '">';
 				echo '<input type="submit"></p></form></div>';
 			}
-
-
-
 			?>
 			<h3><a href="admin.php?status=exit">Выход</a></h3>
 		</div>

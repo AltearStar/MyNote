@@ -44,10 +44,14 @@ class DataHandler{
 		return $NoteList2;
 	}
 
-	public static function EditNote($NoteID,$name, $email, $text){
+	public static function EditNote($NoteID,$name, $email, $text, $Change){
 		$myFile = new File(true);		
 		$data = $myFile->GetData($NoteID);
-		$data = $NoteID . "|`1|" . $name . "|`2|" . $email . "|`3|" . $text . "|`4|" . DataManipualtion::GetValue($data, 5) . "|`5|" . "true" . "|`6|" ; // . "|`|" - Разделитель полей в строке
+		if ($Change==true){
+			$data = $NoteID . "|`1|" . $name . "|`2|" . $email . "|`3|" . $text . "|`4|" . DataManipualtion::GetValue($data, 5) . "|`5|" . "true" . "|`6|" ; // . "|`|" - Разделитель полей в строке
+		}else{
+			$data = $NoteID . "|`1|" . $name . "|`2|" . $email . "|`3|" . $text . "|`4|" . DataManipualtion::GetValue($data, 5) . "|`5|" . "false" . "|`6|" ;
+		}
 		$myFile->WriteData($NoteID, $data);
 	}
 
