@@ -9,7 +9,7 @@
 	//DataHandler::EditNote(2, $tname, $temail, $ttext);
 	//DataHandler::SetNoteReady(2,true);
 	
-	$kek = DataHandler::GetNotes(2);
+	//$kek = DataHandler::GetNotes(2);
 
 
 
@@ -40,7 +40,8 @@ class DataHandler{
 		}
 		echo "<hr>";*/
 
-		return DataHandler::SortNotes($NoteList, $SortType);
+		$NoteList2 = DataHandler::SortNotes($NoteList, $SortType);
+		return $NoteList2;
 	}
 
 	public static function EditNote($NoteID,$name, $email, $text){
@@ -92,8 +93,6 @@ class DataHandler{
 				array_multisort($IDArray, $IsteadyArray, $NameArray, $EmailArray, $TextArray, $ChangedArray);
 				break;
 		}
-
-		array_multisort($IsteadyArray, $NameArray, $IDArray, $EmailArray, $TextArray, $ChangedArray);
 
 		for ($i=0; $i<count($NoteList); $i++){
 			$NoteList[$i]["id"] = $IDArray[$i];
