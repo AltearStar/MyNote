@@ -140,11 +140,18 @@ for ($i=0; $i<3; $i++){
 ?>
 </ul>
 <div class="container" style="text-align: center; font-size: 1.2em;">
-	Страница <?php echo strval(intval($Page)+1) ;?><br>
+	Страница <?php 
+	if ($NoteSum%3 == 0){
+		echo strval(intval($Page)+1) . " из " . strval(intval(intdiv($NoteSum, 3))) ;
+	}else{
+		echo strval(intval($Page)+1) . " из " . strval(intval(intdiv($NoteSum, 3)+1)) ;
+	}
+
+	?><br>
 	<?php
 
 	if ($Page > 0){
-		echo '<a href="index.php?page='. $Page . '&Sort=' . $SortType . '"> На '. strval(intval($Page)) . " страницу </a>";
+		echo '<a href="index.php?page='. $Page . '&Sort=' . $SortType . '"> На '. strval(intval($Page)) . " страницу</a>";
 	}
 	if ($Page+1 < ($NoteSum/3)){
 		echo '<a href="index.php?page='.strval(intval($Page)+2) . '&Sort=' . $SortType . '"> На '. strval(intval($Page)+2) ." страницу </a>";
