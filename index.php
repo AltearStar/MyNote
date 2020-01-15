@@ -142,9 +142,9 @@ for ($i=0; $i<3; $i++){
 <div class="container" style="text-align: center; font-size: 1.2em;">
 	Страница <?php 
 	if ($NoteSum%3 == 0){
-		echo strval(intval($Page)+1) . " из " . strval(intval(intdiv($NoteSum, 3))) ;
+		echo strval(intval($Page)+1) . " из " . strval(intval((int)($NoteSum/3))) ;
 	}else{
-		echo strval(intval($Page)+1) . " из " . strval(intval(intdiv($NoteSum, 3)+1)) ;
+		echo strval(intval($Page)+1) . " из " . strval(intval((int)($NoteSum/3)+1)) ;
 	}
 
 	?><br>
@@ -172,7 +172,7 @@ for ($i=0; $i<3; $i++){
 			echo 'Имя: <input type="text" name="name" value="' . $newName . '">';
 			echo ' E-mail: <input type="text" name="email" value="' . $newEmail . '">';
 			echo ' Суть задачи: <input size="30%" type="text" name="text" value="' . $newNText . '">';
-			echo '<input style="display: none;" type="text" name="page" value="'. intdiv($NoteSum, 3) . '">';
+			echo '<input style="display: none;" type="text" name="page" value="'. (int)($NoteSum/3) . '">';
 			echo '<input type="submit">';
 			?>
 		</p>
