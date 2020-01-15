@@ -80,16 +80,29 @@ $NoteList = DataHandler::GetNotes($SortType);
 	<div>
 		<div class="container">
 		  <div class="row">
-		    <div class="col-sm" align="center">
-		      <a href="index.php?Sort=1">Сортировать<br>по имени</a>
+		  	<?php
+			  	echo '<div class="col-sm" align="center">';
+			  	if ($SortType == 1){
+			  		echo '<a href="index.php?Sort=-1">Сортировать<br>по имени (Я-А)</a>';
+			  	}else{
+			  		echo '<a href="index.php?Sort=1">Сортировать<br>по имени (А-Я)</a>';
+			  	}
+			  	echo '</div><div class="col-sm" align="center">';
+			  	if ($SortType == 2 ){
+			  		echo '<a href="index.php?Sort=-2">Сортировать<br>по почте (A-Z)</a>';
+			  	}else{			  		
+			  		echo '<a href="index.php?Sort=2">Сортировать<br>по почте (A-Z)</a>';
+			  	}
+			  	echo '</div><div class="col-sm" align="center">';
+			  	if ($SortType == 3 ){
+			  		echo '<a href="index.php?Sort=-3">Сортировать<br>по статусу (Обратно)</a></div>';
+			  	}else{			  		
+			  		echo '<a href="index.php?Sort=3">Сортировать<br>по статусу (Обратно)</a></div>';
+			  	}
+		  	?>
 		    </div>
-		    <div class="col-sm" align="center">
-		      <a href="index.php?Sort=2">Сортировать<br>по почте</a>
-		    </div>
-		    <div class="col-sm" align="center">
-		      <a href="index.php?Sort=3">Сортировать<br>по статусу</a>
-		    </div>
-		  </div>
+		</div>
+	</div>
 </div>
 
 	</div>

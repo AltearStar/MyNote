@@ -84,11 +84,21 @@ class DataHandler{
 			case 1://Сортировка по Имени
 				array_multisort($NameArray, $IDArray, $IsteadyArray, $EmailArray, $TextArray, $ChangedArray);
 				break;
+			case -1://Обратная сортировка по Имени
+				array_multisort($NameArray, SORT_DESC, $IDArray, $IsteadyArray, $EmailArray, $TextArray, $ChangedArray);
+				//echo '<script type="text/javascript">alert( "Вход!");</script>';
+				break;
 			case 2://Сортировка по почте
 				array_multisort($EmailArray, $IDArray, $IsteadyArray, $NameArray, $TextArray, $ChangedArray);
 				break;
+			case -2://Обратная сортировка по почте
+				array_multisort($EmailArray, SORT_DESC, $IDArray, $IsteadyArray, $NameArray, $TextArray, $ChangedArray);
+				break;
 			case 3://Сортировка по выполнению
 				array_multisort($IsteadyArray, $IDArray, $NameArray, $EmailArray, $TextArray, $ChangedArray);
+				break;
+			case -3://Обратная сортировка по выполнению
+				array_multisort($IsteadyArray, SORT_DESC, $IDArray, $NameArray, $EmailArray, $TextArray, $ChangedArray);
 				break;
 			
 			default://Сортировка по ID
