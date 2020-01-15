@@ -7,13 +7,10 @@ include 'datahandler.php';
 $Page = 0;
 $NoteSum = 3;
 $SortType = 0;
+$newName = "";
+$newEmail = "";
+$newNText = "";
 
-if (isset($_POST['name'])){
-	$newName = $_POST['name'];
-	$newEmail = $_POST['email'];
-	$newNText = $_POST['text'];
-	DataHandler::SetNewNote($newName, $newEmail, $newNText);
-}
 if (isset($_GET['status'])){
 	if ($_GET['status']=="exit"){
 		$_SESSION['account']="";
@@ -27,6 +24,28 @@ if (isset($_GET['page'])){//получение номера выводимой �
 if (isset($_GET['Sort'])){//получение типа сортировки
 	$SortType = intval($_GET['Sort']) ;
 }
+
+
+
+if (isset($_POST['name'])){
+	$newName = $_POST['name'];
+	$newEmail = $_POST['email'];
+	$newNText = $_POST['text'];
+	$Page = $_POST['page'];
+
+	if ($newName=="" or $newEmail=="" or $newNText==""){
+		echo '<script type="text/javascript">alert( "Пожалуйста, заполните все поля.");</script>';
+	}elseif (strpos($newEmail,"@")==false or strpos($newEmail,".",strpos($newEmail,"@"))==false) {
+		echo strpos($newEmail,".", strpos($newEmail,"@"));
+		echo'<script type="text/javascript">alert( "Пожалуйста, укажите корректный E-mail.");</script>';
+	}else{
+		DataHandler::SetNewNote($newName, $newEmail, $newNText);
+		echo'<script type="text/javascript">alert( "Новая задача успешно добавлена!");</script>';
+	}
+
+
+}
+
 
 
 
@@ -95,14 +114,13 @@ for ($i=0; $i<3; $i++){
 		}
         if ($_SESSION['account']=="admin"){
             echo '<br><a href="admin.php?Post='. strval($i+$Page*3) . '&Sort=' . $SortType  . '">Изменить</a>';
-            echo ' | <a href="index.php?page='. strval($Page+1) . '&Post='. strval($i+$Page*3) . '&Sort=' . $SortType  . '">Пометить, как выполненое</a>';
+            echo ' | <a href="index.php?page='. strval($Page+1) . '&Post='. strval($i+$Page*3) . '&Sort=' . $SortType  . '">Изменить статус (Выполнено / не выполнено)</a>';
         }
 		echo "<hr></li>";
 	}
 	
 }
 ?>
-
 </ul>
 <div class="container" style="text-align: center; font-size: 1.2em;">
 	Страница <?php echo strval(intval($Page)+1) ;?><br>
@@ -111,7 +129,7 @@ for ($i=0; $i<3; $i++){
 	if ($Page > 0){
 		echo '<a href="index.php?page='. $Page . '&Sort=' . $SortType . '"> На '. strval(intval($Page)) . " страницу </a>";
 	}
-	if ($Page < intdiv($NoteSum, 3)){
+	if ($Page+1 < ($NoteSum/3)){
 		echo '<a href="index.php?page='.strval(intval($Page)+2) . '&Sort=' . $SortType . '"> На '. strval(intval($Page)+2) ." страницу </a>";
 	}
 	?> 
@@ -125,10 +143,13 @@ for ($i=0; $i<3; $i++){
 	<h2>Добавить задачу:</h2>
 	<form action="index.php" method="post">
 		<p>
-			Имя: <input type="text" name="name">
-			E-mail: <input type="text" name="email">
-			Суть задачи: <input type="text" name="text">
-			<input type="submit">
+			<?php
+			echo 'Имя: <input type="text" name="name" value="' . $newName . '">';
+			echo 'E-mail: <input type="text" name="email" value="' . $newEmail . '">';
+			echo 'Суть задачи: <input type="text" name="text" value="' . $newNText . '">';
+			echo '<input style="display: none;" type="text" name="page" value="'. intdiv($NoteSum, 3) . '">';
+			echo '<input type="submit">';
+			?>
 		</p>
 	</form>
 </div>

@@ -11,6 +11,10 @@ if (isset($_POST['ligin'])){
 		$_SESSION['account']="";
 	}
 }
+if (isset($_GET['Post']) and isset($_GET['Sort'])){
+	$Post = $_GET['Post'];
+	$Sort = $_GET['Sort'];
+}
 if (isset($_GET['status'])){
 	if ($_GET['status']=="exit"){
 		$_SESSION['account']="";
@@ -21,7 +25,24 @@ if (isset($_POST['name'])){
 	$Email = $_POST['email'];
 	$Text = $_POST['text'];
 	$ID = $_POST['id'];
-	DataHandler::EditNote($ID, $Name, $Email, $Text);
+	$Post = $_POST['Post'];
+	$Sort = $_POST['Sort'];
+
+	if ($Name=="" or $Email=="" or $Text==""){
+		echo '<script type="text/javascript">alert( "Пожалуйста, заполните все поля.");</script>';
+	}elseif (strpos($Email,"@")==false or strpos($Email,".",strpos($Email,"@"))==false) {
+		echo strpos($Email,".", strpos($Email,"@"));
+		echo'<script type="text/javascript">alert( "Пожалуйста, укажите корректный E-mail.");</script>';
+	}else{
+		DataHandler::EditNote($ID, $Name, $Email, $Text);
+		echo'<script type="text/javascript">alert( "Задача успешно отредактирована!");document.location.href = "index.php";</script>';
+	}
+
+
+
+
+
+	
 }
 
 ?>
@@ -44,6 +65,18 @@ if (isset($_POST['name'])){
 			<div class="container" align="center">
 				<h3>Вход в учетную запись администратора</h3>
 				<form action="admin.php" method="post">
+					<?php 
+					if (isset($_POST['ligin'])){
+						if($_POST['ligin']=="" or $_POST['passw']==""){
+							echo '<p style="color:red;">Пожалуйста, заполните все поля для входа.</p>';
+						}elseif($_SESSION['account']==""){
+							echo '<p style="color:red;">Не верные данные для входа.</p>';
+						}
+
+
+						}
+
+						?>
 					<p>Логин: <input type="text" name="ligin"></p>
 					<p>E-mail: <input type="text" name="passw"></p>
 						<input type="submit" value="Вход">
@@ -55,15 +88,17 @@ if (isset($_POST['name'])){
 		<div class="container" align="center">
 			<h3><a href="index.php">На главную</a></h3>
 			<?php
-			if (isset($_GET['Post']) and isset($_GET['Sort'])){
-				$NoteList = DataHandler::GetNotes(intval($_GET['Sort']));
+			if (isset($Post) and isset($Sort)){
+				$NoteList = DataHandler::GetNotes(intval($Sort));
 				echo '<div class="container">';	
 				echo '<h3 align=left>Редактировать запись:</h3>';	
 				echo '<form action="admin.php" method="post"><p>';		
-				echo 'Имя: <input type="text" name="name" value="' . $NoteList[$_GET['Post']]["name"] . '"></p>';
-				echo '<p>E-mail: <input type="text" name="email" value="' . $NoteList[$_GET['Post']]["email"] . '"></p>';
-				echo '<p>Текст записи: <input type="text" name="text" value="' . $NoteList[$_GET['Post']]["text"] . '"></p>';
-				echo '<input style="display: none;" type="text" name="id" value="' . $NoteList[$_GET['Post']]["id"] . '">';
+				echo 'Имя: <input type="text" name="name" value="' . $NoteList[$Post]["name"] . '"></p>';
+				echo '<p>E-mail: <input type="text" name="email" value="' . $NoteList[$Post]["email"] . '"></p>';
+				echo '<p>Текст записи: <input type="text" name="text" value="' . $NoteList[$Post]["text"] . '"></p>';
+				echo '<input style="display: none;" type="text" name="id" value="' . $NoteList[$Post]["id"] . '">';
+				echo '<input style="display: none;" type="text" name="Sort" value="' . $Sort . '">';
+				echo '<input style="display: none;" type="text" name="Post" value="' . $Post . '">';
 				echo '<input type="submit"></p></form></div>';
 			}
 
