@@ -52,11 +52,11 @@ if (isset($_POST['name'])){
 $NoteList = DataHandler::GetNotes($SortType);
 $NoteSum = count($NoteList);
 
-if(isset($_GET['Post']) and isset($_GET['page']) and isset($_GET['Sort'])){
-    if ($NoteList[$_GET['Post']]["isteady"]=="Statustrue"){
-        DataHandler::SetNoteReady($NoteList[$_GET['Post']]["id"],"false");
-    }else{
+if(isset($_GET['Post']) and isset($_GET['page']) and isset($_GET['Sort']) and isset($_GET['check'])){
+    if ($_GET['check']=="true"){
         DataHandler::SetNoteReady($NoteList[$_GET['Post']]["id"],"true");
+    }else{
+        DataHandler::SetNoteReady($NoteList[$_GET['Post']]["id"],"false");
     }
 }
 $NoteList = DataHandler::GetNotes($SortType);
@@ -71,7 +71,7 @@ $NoteList = DataHandler::GetNotes($SortType);
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </head>
 <body>
-<div class="container" style="background-color: #26a69a; padding: 10px; display: flex; justify-content: space-between;">
+<div class="container" style="background-color: #26a69a; padding: 10px; display: flex; justify-content: space-between; color: white;">
 	<h1>MyNote</h1>
 </div>
 
@@ -89,7 +89,7 @@ $NoteList = DataHandler::GetNotes($SortType);
 			  	}
 			  	echo '</div><div class="col-sm" align="center">';
 			  	if ($SortType == 2 ){
-			  		echo '<a href="index.php?Sort=-2">Сортировать<br>по почте (A-Z)</a>';
+			  		echo '<a href="index.php?Sort=-2">Сортировать<br>по почте (Z-A)</a>';
 			  	}else{			  		
 			  		echo '<a href="index.php?Sort=2">Сортировать<br>по почте (A-Z)</a>';
 			  	}
@@ -123,12 +123,16 @@ for ($i=0; $i<3; $i++){
 			echo "<br><b>Выполнено</b>";
 		}
 		if ($NoteList[$i+$Page*3]["changed"]=="true"){
-			echo '<br><i style="font-size:0.8em;">Было отредактировано администратором</i>';
+			echo '<br><i style="font-size:0.8em;">Отредактировано администратором</i>';
 		}
         if ($_SESSION['account']=="admin"){
             echo '<br><a href="admin.php?Post='. strval($i+$Page*3) . '&Sort=' . $SortType  . '">Изменить</a>';
-            echo ' | <a href="index.php?page='. strval($Page+1) . '&Post='. strval($i+$Page*3) . '&Sort=' . $SortType  . '">Изменить статус (Выполнено / не выполнено)</a>';
-        }
+            if ($NoteList[$i+$Page*3]["isteady"]=="Statusfalse"){
+				echo ' | <a href="index.php?page='. strval($Page+1) . '&Post='. strval($i+$Page*3) . '&Sort=' . $SortType  . '&check=' . "true"  . '">Отметить, как выполненое</a>';
+			}else{
+				echo ' | <a href="index.php?page='. strval($Page+1) . '&Post='. strval($i+$Page*3) . '&Sort=' . $SortType  . '&check=' . "false"  . '">Отметить, как не выполненое</a>';
+			}
+		}
 		echo "<hr></li>";
 	}
 	
@@ -146,33 +150,35 @@ for ($i=0; $i<3; $i++){
 		echo '<a href="index.php?page='.strval(intval($Page)+2) . '&Sort=' . $SortType . '"> На '. strval(intval($Page)+2) ." страницу </a>";
 	}
 	?> 
-	</div>	
+	</div>
+<hr>	
 </div>
 
 
 
 </div>
-<div class="container">
+<div class="container" style="background-color: #4db6ac; padding: 10px; color: white;">
 	<h2>Добавить задачу:</h2>
 	<form action="index.php" method="post">
 		<p>
 			<?php
 			echo 'Имя: <input type="text" name="name" value="' . $newName . '">';
-			echo 'E-mail: <input type="text" name="email" value="' . $newEmail . '">';
-			echo 'Суть задачи: <input type="text" name="text" value="' . $newNText . '">';
+			echo ' E-mail: <input type="text" name="email" value="' . $newEmail . '">';
+			echo ' Суть задачи: <input size="30%" type="text" name="text" value="' . $newNText . '">';
 			echo '<input style="display: none;" type="text" name="page" value="'. intdiv($NoteSum, 3) . '">';
 			echo '<input type="submit">';
 			?>
 		</p>
 	</form>
 </div>
-<div class="container" align="right">
+
+<div class="container" align="right" style="background-color: #00796b; padding: 10px;">
 	<?php
 	if ($_SESSION['account']=="admin"){
-		echo '<a href="admin.php">Администрирование</a>';
-		echo '<a href="index.php?status=exit" style="margin-left:15px;">Выход</a>';
+		echo '<a href="admin.php" style="color: white;">Администрирование</a>';
+		echo '<a href="index.php?status=exit" style="margin-left:15px; color: white;">Выход</a>';
 	}else{
-		echo '<a href="admin.php">Вход</a>';
+		echo '<a href="admin.php" style="color: white;">Вход</a>';
 	}
 
 	?>	

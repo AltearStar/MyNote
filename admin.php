@@ -33,6 +33,9 @@ if (isset($_POST['name'])){
 	}elseif (strpos($Email,"@")==false or strpos($Email,".",strpos($Email,"@"))==false) {
 		echo strpos($Email,".", strpos($Email,"@"));
 		echo'<script type="text/javascript">alert( "Пожалуйста, укажите корректный E-mail.");</script>';
+	}elseif($_SESSION['account']!="admin"){		
+		echo'<script type="text/javascript">alert( "Вы вышли из учетной записи администратора! Редактирование не доступно");</script>';
+
 	}else{
 		DataHandler::EditNote($ID, $Name, $Email, $Text);
 		echo'<script type="text/javascript">alert( "Задача успешно отредактирована!");document.location.href = "index.php";</script>';
@@ -70,7 +73,7 @@ if (isset($_POST['name'])){
 						if($_POST['ligin']=="" or $_POST['passw']==""){
 							echo '<p style="color:red;">Пожалуйста, заполните все поля для входа.</p>';
 						}elseif($_SESSION['account']==""){
-							echo '<p style="color:red;">Не верные данные для входа.</p>';
+							echo '<p style="color:red;">Неверные данные для входа.</p>';
 						}
 
 
@@ -81,6 +84,9 @@ if (isset($_POST['name'])){
 					<p>E-mail: <input type="text" name="passw"></p>
 						<input type="submit" value="Вход">
 				</form>
+
+
+				<h3 style="margin-top: 50px;"><a href="index.php">На главную</a></h3>
 			</div>
 		<?php
 	}else{
@@ -88,7 +94,7 @@ if (isset($_POST['name'])){
 		<div class="container" align="center">
 			<h3><a href="index.php">На главную</a></h3>
 			<?php
-			if (isset($Post) and isset($Sort)){
+			if ($_SESSION['account']=="admin" and isset($Post) and isset($Sort)){
 				$NoteList = DataHandler::GetNotes(intval($Sort));
 				echo '<div class="container">';	
 				echo '<h3 align=left>Редактировать запись:</h3>';	

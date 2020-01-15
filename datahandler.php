@@ -55,8 +55,6 @@ class DataHandler{
 		$myFile = new File(true);
 		$data = $myFile->GetData($NoteID);
 		if ($Status=="true"){
-
-			echo "вход в тру";
 			$data = $NoteID . "|`1|" . DataManipualtion::GetValue($data, 2) . "|`2|" . DataManipualtion::GetValue($data, 3) . "|`3|" . DataManipualtion::GetValue($data, 4) . "|`4|" . "Statustrue" . "|`5|" . DataManipualtion::GetValue($data, 6) . "|`6|" ;
 		}
 		else{
