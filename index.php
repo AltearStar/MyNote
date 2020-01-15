@@ -1,7 +1,9 @@
 <?php
-
+session_start();
+if (!isset($_SESSION['account'])){
+	$_SESSION['account']="";
+}
 include 'datahandler.php';
-
 $Page = 0;
 $NoteSum = 3;
 $SortType = 0;
@@ -11,6 +13,12 @@ if (isset($_POST['name'])){
 	$newNText = $_POST['text'];
 	DataHandler::SetNewNote($newName, $newEmail, $newNText);
 }
+if (isset($_GET['status'])){
+	if ($_GET['status']=="exit"){
+		$_SESSION['account']="";
+	}
+}
+
 if (isset($_GET['page'])){//получение номера выводимой страницы
 	$Page = intval($_GET['page'])-1 ;
 }else{
@@ -29,7 +37,9 @@ if (isset($_GET['Sort'])){//получение типа сортировки
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </head>
 <body>
-<div class="container" style="background-color: #26a69a; padding: 10px;"><h1>MyNote</h1></div>
+<div class="container" style="background-color: #26a69a; padding: 10px; display: flex; justify-content: space-between;">
+	<h1>MyNote</h1>
+</div>
 
 <div class="container" style="margin-top: 10px; display: flex; justify-content: space-between; width: 100%;">
 	<h2>Задачи:</h2>
@@ -104,6 +114,17 @@ for ($i=0; $i<3; $i++){
 			<input type="submit">
 		</p>
 	</form>
+</div>
+<div class="container" align="right">
+	<?php
+	if ($_SESSION['account']=="admin"){
+		echo '<a href="admin.php">Администрирование</a>';
+		echo '<a href="index.php?status=exit" style="margin-left:15px;">Выход</a>';
+	}else{
+		echo '<a href="admin.php">Вход</a>';
+	}
+
+	?>	
 </div>
 </body>
 </html>
