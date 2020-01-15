@@ -4,18 +4,21 @@ include 'datahandler.php';
 
 $Page = 0;
 $NoteSum = 3;
+$SortType = 0;
 if (isset($_POST['name'])){
 	$newName = $_POST['name'];
 	$newEmail = $_POST['email'];
 	$newNText = $_POST['text'];
 	DataHandler::SetNewNote($newName, $newEmail, $newNText);
 }
-if (isset($_GET['page'])){
+if (isset($_GET['page'])){//получение номера выводимой страницы
 	$Page = intval($_GET['page'])-1 ;
 }else{
 	$Page = 0;
 }
-
+if (isset($_GET['Sort'])){//получение типа сортировки
+	$SortType = intval($_GET['Sort']) ;
+}
 ?>
 
 <!DOCTYPE html>
@@ -28,13 +31,30 @@ if (isset($_GET['page'])){
 <body>
 <div class="container" style="background-color: #26a69a; padding: 10px;"><h1>MyNote</h1></div>
 
-<div class="container" style="margin-top: 10px;">
+<div class="container" style="margin-top: 10px; display: flex; justify-content: space-between; width: 100%;">
 	<h2>Задачи:</h2>
-	<hr>
+	<div>
+		<div class="container">
+		  <div class="row">
+		    <div class="col-sm" align="center">
+		      <a href="index.php?Sort=1">Сортировать<br>по имени</a>
+		    </div>
+		    <div class="col-sm" align="center">
+		      <a href="index.php?Sort=2">Сортировать<br>по почте</a>
+		    </div>
+		    <div class="col-sm" align="center">
+		      <a href="index.php?Sort=3">Сортировать<br>по статусу</a>
+		    </div>
+		  </div>
+</div>
+
+	</div>
+</div>
+<div class="container">
 <ul style="font-size: 1.2em;">	
 
 <?php
-$NoteList = DataHandler::GetNotes(0);
+$NoteList = DataHandler::GetNotes($SortType);
 $NoteSum = count($NoteList);
 
 for ($i=0; $i<3; $i++){
@@ -62,10 +82,10 @@ for ($i=0; $i<3; $i++){
 	<?php
 
 	if ($Page > 0){
-		echo '<a href="index.php?page='.$Page . '"> На '. strval(intval($Page)) ." страницу </a>";
+		echo '<a href="index.php?page='.$Page . '&Sort=' . $SortType . '"> На '. strval(intval($Page)) . " страницу </a>";
 	}
 	if ($Page < intdiv($NoteSum, 3)){
-		echo '<a href="index.php?page='.strval(intval($Page)+2) . '"> На '. strval(intval($Page)+2) ." страницу </a>";
+		echo '<a href="index.php?page='.strval(intval($Page)+2) . '&Sort=' . $SortType . '"> На '. strval(intval($Page)+2) ." страницу </a>";
 	}
 	?> 
 	</div>	
