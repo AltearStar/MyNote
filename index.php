@@ -7,6 +7,7 @@ include 'datahandler.php';
 $Page = 0;
 $NoteSum = 3;
 $SortType = 0;
+
 if (isset($_POST['name'])){
 	$newName = $_POST['name'];
 	$newEmail = $_POST['email'];
@@ -18,7 +19,6 @@ if (isset($_GET['status'])){
 		$_SESSION['account']="";
 	}
 }
-
 if (isset($_GET['page'])){//получение номера выводимой страницы
 	$Page = intval($_GET['page'])-1 ;
 }else{
@@ -27,6 +27,21 @@ if (isset($_GET['page'])){//получение номера выводимой �
 if (isset($_GET['Sort'])){//получение типа сортировки
 	$SortType = intval($_GET['Sort']) ;
 }
+
+
+
+$NoteList = DataHandler::GetNotes($SortType);
+$NoteSum = count($NoteList);
+
+if(isset($_GET['Post']) and isset($_GET['page']) and isset($_GET['Sort'])){
+    if ($NoteList[$_GET['Post']]["isteady"]=="Statustrue"){
+        DataHandler::SetNoteReady($NoteList[$_GET['Post']]["id"],"false");
+    }else{
+        DataHandler::SetNoteReady($NoteList[$_GET['Post']]["id"],"true");
+    }
+}
+$NoteList = DataHandler::GetNotes($SortType);
+
 ?>
 
 <!DOCTYPE html>
@@ -64,8 +79,6 @@ if (isset($_GET['Sort'])){//получение типа сортировки
 <ul style="font-size: 1.2em;">	
 
 <?php
-$NoteList = DataHandler::GetNotes($SortType);
-$NoteSum = count($NoteList);
 
 for ($i=0; $i<3; $i++){
 
@@ -80,6 +93,10 @@ for ($i=0; $i<3; $i++){
 		if ($NoteList[$i+$Page*3]["changed"]=="true"){
 			echo '<br><i style="font-size:0.8em;">Было отредактировано администратором</i>';
 		}
+        if ($_SESSION['account']=="admin"){
+            echo '<br><a href="admin.php?Post='. strval($i+$Page*3) . '&Sort=' . $SortType  . '">Изменить</a>';
+            echo ' | <a href="index.php?page='. strval($Page+1) . '&Post='. strval($i+$Page*3) . '&Sort=' . $SortType  . '">Пометить, как выполненое</a>';
+        }
 		echo "<hr></li>";
 	}
 	
@@ -92,7 +109,7 @@ for ($i=0; $i<3; $i++){
 	<?php
 
 	if ($Page > 0){
-		echo '<a href="index.php?page='.$Page . '&Sort=' . $SortType . '"> На '. strval(intval($Page)) . " страницу </a>";
+		echo '<a href="index.php?page='. $Page . '&Sort=' . $SortType . '"> На '. strval(intval($Page)) . " страницу </a>";
 	}
 	if ($Page < intdiv($NoteSum, 3)){
 		echo '<a href="index.php?page='.strval(intval($Page)+2) . '&Sort=' . $SortType . '"> На '. strval(intval($Page)+2) ." страницу </a>";

@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+include 'datahandler.php';
 if (isset($_POST['ligin'])){
 	$login = $_POST['ligin'];
 	$password = $_POST['passw'];
@@ -13,6 +15,13 @@ if (isset($_GET['status'])){
 	if ($_GET['status']=="exit"){
 		$_SESSION['account']="";
 	}
+}
+if (isset($_POST['name'])){
+	$Name = $_POST['name'];
+	$Email = $_POST['email'];
+	$Text = $_POST['text'];
+	$ID = $_POST['id'];
+	DataHandler::EditNote($ID, $Name, $Email, $Text);
 }
 
 ?>
@@ -45,6 +54,22 @@ if (isset($_GET['status'])){
 		?>
 		<div class="container" align="center">
 			<h3><a href="index.php">На главную</a></h3>
+			<?php
+			if (isset($_GET['Post']) and isset($_GET['Sort'])){
+				$NoteList = DataHandler::GetNotes(intval($_GET['Sort']));
+				echo '<div class="container">';	
+				echo '<h3 align=left>Редактировать запись:</h3>';	
+				echo '<form action="admin.php" method="post"><p>';		
+				echo 'Имя: <input type="text" name="name" value="' . $NoteList[$_GET['Post']]["name"] . '"></p>';
+				echo '<p>E-mail: <input type="text" name="email" value="' . $NoteList[$_GET['Post']]["email"] . '"></p>';
+				echo '<p>Текст записи: <input type="text" name="text" value="' . $NoteList[$_GET['Post']]["text"] . '"></p>';
+				echo '<input style="display: none;" type="text" name="id" value="' . $NoteList[$_GET['Post']]["id"] . '">';
+				echo '<input type="submit"></p></form></div>';
+			}
+
+
+
+			?>
 			<h3><a href="admin.php?status=exit">Выход</a></h3>
 		</div>
 		<?php
